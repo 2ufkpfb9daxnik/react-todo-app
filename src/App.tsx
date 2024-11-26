@@ -64,6 +64,26 @@ const App = () => {
     setNewTodoPriority(3); // ◀◀ 追加
     setNewTodoDeadline(null); // ◀◀ 追加
   };
+  const updateIsDone = (id: string, value: boolean) => {
+    const updatedTodos = todos.map((todo) => {
+      if (todo.id === id) {
+        return { ...todo, isDone: value }; // スプレッド構文
+      } else {
+        return todo;
+      }
+    });
+    setTodos(updatedTodos);
+  };
+
+  const removeCompletedTodos = () => {
+    const updatedTodos = todos.filter((todo) => !todo.isDone);
+    setTodos(updatedTodos);
+  };
+
+  const remove = (id: string) => {
+    const updatedTodos = todos.filter((todo) => todo.id !== id);
+    setTodos(updatedTodos);
+  };
   const currentDate = dayjs().format("YYYY年MM月DD日 H時m分");
 
   return (
@@ -75,6 +95,7 @@ const App = () => {
           <WelcomeMessage
             name="寝屋川タヌキ"
             uncompletedCount={uncompletedCount}
+            todos={todos}
           />
         </div>
 
@@ -156,7 +177,16 @@ const App = () => {
             追加
           </button>
         </div>
-        <TodoList todos={todos} />
+        <button
+          type="button"
+          onClick={removeCompletedTodos}
+          className={
+            "mt-5 rounded-md bg-red-500 px-3 py-1 font-bold text-white hover:bg-red-600"
+          }
+        >
+          完了済みのタスクを削除
+        </button>
+        <TodoList todos={todos} updateIsDone={updateIsDone} remove={remove} />
         {/* ...ここまで */}
       </div>
     </div>

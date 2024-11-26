@@ -1,6 +1,13 @@
 import React from "react";
 import dayjs from "dayjs";
 import { FaStar } from "react-icons/fa";
+import { Todo } from "./types";
+
+type Props = {
+  todos: Todo[];
+  updateIsDone: (id: string, value: boolean) => void;
+  remove: (id: string) => void; // ◀◀ 追加
+};
 
 const TodoList = (props: Props) => {
   const todos = [...props.todos].sort((a, b) => a.priority - b.priority);
@@ -56,6 +63,12 @@ const TodoList = (props: Props) => {
                 className="absolute inset-0 size-full object-cover opacity-20"
               />
             )}
+            <input
+              type="checkbox"
+              checked={todo.isDone}
+              onChange={(e) => props.updateIsDone(todo.id, e.target.checked)}
+              className="mr-1.5 cursor-pointer"
+            />
             <div
               className={`text-5xl font-bold ${isOverdue ? "text-red-500" : ""}`}
             >
@@ -80,6 +93,12 @@ const TodoList = (props: Props) => {
             <div className="text-2xl">
               あと{todo.deadline ? `${remainingDays}日` : "何日とかないよー"}
             </div>
+            <button
+              onClick={() => props.remove(todo.id)}
+              className="rounded-md bg-slate-200 px-2 py-1 text-sm font-bold text-white hover:bg-red-500"
+            >
+              削除
+            </button>
           </div>
         );
       })}
