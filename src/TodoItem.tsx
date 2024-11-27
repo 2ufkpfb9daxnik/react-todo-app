@@ -2,6 +2,7 @@ import React from "react";
 import dayjs from "dayjs";
 import { FaStar } from "react-icons/fa";
 import { Todo } from "./types";
+import complete from './public/circle-3.svg';
 
 type Props = {
   todos: Todo[];
@@ -58,7 +59,7 @@ const TodoItem = (props: Props) => {
             >
               {todo.isDone && (
                 <img
-                  src="/circle-3.svg"
+                  src={complete}
                   alt="Completed"
                   className="absolute inset-0 size-full object-cover opacity-20"
                 />
