@@ -2,6 +2,7 @@ import React from "react";
 import dayjs from "dayjs";
 import { FaStar } from "react-icons/fa";
 import { Todo } from "./types";
+import TodoItem from "./TodoItem";
 
 type Props = {
   todos: Todo[];
