@@ -72,6 +72,8 @@ const TodoList = (props: Props) => {
           ? calculateRemainingDays(todo.deadline)
           : null;
         const isOverdue = remainingDays !== null && remainingDays <= 0;
+        const isDueSoon =
+          remainingDays !== null && remainingDays <= 7 && remainingDays > 0;
         const sizeFactor =
           (remainingDays !== null ? Math.max(1, 30 - remainingDays) : 1) *
           todo.priority;
@@ -99,13 +101,12 @@ const TodoList = (props: Props) => {
 
         return (
           <div
-            className={`relative rounded-2xl border-8 bg-gradient-to-r from-red-100 to-blue-100 p-4 shadow-xl ${isOverdue ? "border-red-500" : "border-green-500"} ${todo.isDone ? "opacity-50" : ""} ${gridClass}`}
+            className={`relative rounded-2xl border-8 bg-gradient-to-r from-red-100 to-blue-100 p-4 shadow-xl ${isOverdue ? "border-red-500" : isDueSoon ? "border-yellow-500" : "border-green-500"} ${todo.isDone ? "opacity-50" : ""} ${gridClass} ${editingTodoId === todo.id ? "bg-yellow-100" : ""}`}
             key={todo.id}
           >
             {editingTodoId === todo.id ? (
               <div>
                 <input
-                  className="rounded-md border border-gray-400 px-2 py-0.5"
                   type="text"
                   value={editedTodo.name}
                   onChange={(e) =>
@@ -113,7 +114,6 @@ const TodoList = (props: Props) => {
                   }
                 />
                 <input
-                  className="rounded-md border border-gray-400 px-2 py-0.5"
                   type="number"
                   value={editedTodo.priority}
                   onChange={(e) =>
@@ -124,7 +124,6 @@ const TodoList = (props: Props) => {
                   }
                 />
                 <input
-                  className="rounded-md border border-gray-400 px-2 py-0.5"
                   type="datetime-local"
                   value={
                     editedTodo.deadline
@@ -140,12 +139,7 @@ const TodoList = (props: Props) => {
                     })
                   }
                 />
-                <button
-                  className="rounded-md bg-slate-500 px-2 py-1 text-sm font-bold text-white hover:bg-blue-500"
-                  onClick={() => handleSaveClick(todo.id)}
-                >
-                  保存
-                </button>
+                <button onClick={() => handleSaveClick(todo.id)}>保存</button>
               </div>
             ) : (
               <div>
@@ -159,10 +153,10 @@ const TodoList = (props: Props) => {
                     className="mr-3 size-8 cursor-pointer"
                   />
                   <div
-                    className={`text-5xl font-bold ${isOverdue ? "text-red-500" : ""}`}
+                    className={`text-5xl font-bold ${isOverdue ? "text-red-500" : isDueSoon ? "text-yellow-500" : ""}`}
                     style={{ fontSize: priorityFontSize }}
                   >
-                    {isOverdue ? `***${todo.name}***` : todo.name}
+                    {isOverdue || isDueSoon ? `*${todo.name}*` : todo.name}
                   </div>
                 </div>
                 <div
