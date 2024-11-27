@@ -62,7 +62,7 @@ const TodoList = (props: Props) => {
             {todo.isDone && (
               <img
                 src={complete}
-                alt="Completed"
+                alt="達成済み!"
                 className="absolute inset-0 size-full object-cover opacity-20"
               />
             )}
