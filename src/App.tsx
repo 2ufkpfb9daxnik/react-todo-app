@@ -49,8 +49,8 @@ const App = () => {
   console.log(JSON.stringify(todos, null, 2));
 
   const isValidTodoName = (name: string): string => {
-    if (name.length < 2 || name.length > 32) {
-      return "2文字以上、32文字以内で入力してください";
+    if (name.length > 32) {
+      return "32文字超過";
     } else {
       return "";
     }
@@ -66,7 +66,9 @@ const App = () => {
   };
 
   const addNewTodo = () => {
-    if (newTodoNameError) return;
+    if (newTodoName.length > 32) {
+      return;
+    }
 
     const newTodo: Todo = {
       id: uuid(),
@@ -184,12 +186,12 @@ const App = () => {
                   id="newTodoName"
                   type="text"
                   value={newTodoName}
-                  onChange={(e) => setNewTodoName(e.target.value)}
+                  onChange={updateNewTodoName}
                   className={twMerge(
                     "grow rounded-md border p-2",
                     newTodoNameError && "border-red-500 outline-red-500"
                   )}
-                  placeholder="2文字以上32文字以内"
+                  placeholder="名前なしでもOK, 32文字以内"
                 />
               </div>
               {newTodoNameError && (
@@ -198,19 +200,21 @@ const App = () => {
                   <span>{newTodoNameError}</span>
                 </div>
               )}
-              <div className="flex items-center space-x-2">
-                <label className="font-bold" htmlFor="newTodoPriority">
-                  優先度
-                </label>
-                <input
-                  id="newTodoPriority"
-                  type="number"
-                  value={newTodoPriority}
-                  onChange={(e) => setNewTodoPriority(parseInt(e.target.value))}
-                  className="grow rounded-md border p-2"
-                  min="1"
-                  max="5"
-                />
+              <div className="flex gap-5">
+                <div className="font-bold">優先度</div>
+                {[1, 2, 3, 4, 5].map((value) => (
+                  <label key={value} className="flex items-center space-x-1">
+                    <input
+                      id={`priority-${value}`}
+                      name="priorityGroup"
+                      type="radio"
+                      value={value}
+                      checked={newTodoPriority === value}
+                      onChange={(e) => setNewTodoPriority(value)}
+                    />
+                    <span>{value}</span>
+                  </label>
+                ))}
               </div>
               <div className="flex items-center space-x-2">
                 <label className="font-bold" htmlFor="newTodoDeadline">

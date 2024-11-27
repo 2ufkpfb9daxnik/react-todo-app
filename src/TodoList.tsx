@@ -107,6 +107,7 @@ const TodoList = (props: Props) => {
             {editingTodoId === todo.id ? (
               <div>
                 <input
+                  className="rounded-md border border-gray-300 p-2"
                   type="text"
                   value={editedTodo.name}
                   onChange={(e) =>
@@ -114,6 +115,7 @@ const TodoList = (props: Props) => {
                   }
                 />
                 <input
+                  className="rounded-md border border-gray-300 p-2"
                   type="number"
                   value={editedTodo.priority}
                   onChange={(e) =>
@@ -124,6 +126,7 @@ const TodoList = (props: Props) => {
                   }
                 />
                 <input
+                  className="rounded-md border border-gray-300 p-2"
                   type="datetime-local"
                   value={
                     editedTodo.deadline
