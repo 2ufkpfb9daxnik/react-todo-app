@@ -4,12 +4,18 @@ https://2ufkpfb9daxnik.github.io/react-todo-app/
 
 React、TypeScript、Tailwind CSS を使用し、ローカルストレージでデータを永続化した「Todoアプリ」です。
 
-https://www.youtube.com/watch?v=An29jZOqyGY を参考に、重要度で文字・枠サイズを変えるなどしました
+https://www.youtube.com/watch?v=An29jZOqyGY
+
+を参考に、重要度で文字・枠サイズを変えるなどしました
+
+1週間前になると黄色くなって
 
 期日を過ぎると赤くして急かします
 
 背景画像として
+
 https://www.vecteezy.com/vector-art/8014116-summer-background-vector-design-hello-summer-concept-design-abstract-background-illustration-with-wave-line-and-leaves-colorful-banner
+
 を利用、その際の帰属表示は要請に従い
 
 link>
