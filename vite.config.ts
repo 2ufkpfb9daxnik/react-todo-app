@@ -21,5 +21,8 @@ export default defineConfig({
     port: 3000, // デフォルトのポートを3000に設定
     strictPort: false,
     open: true,
+    headers: {
+      "Permissions-Policy": "interest-cohort=()"
+    }
   },
 });
