@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import { FaStar } from "react-icons/fa";
 import { Todo } from "./types";
 import TodoItem from "./TodoItem";
-import complete from './public/circle-3.svg';
+import complete from '../public/circle-3.svg';
 
 type Props = {
   todos: Todo[];
@@ -21,6 +21,8 @@ const TodoList = (props: Props) => {
       </div>
     );
   }
+
+  const complete = '/circle-3.svg';
 
   const calculateRemainingDays = (deadline: Date) => {
     const now = dayjs();
@@ -52,7 +54,6 @@ const TodoList = (props: Props) => {
           ? calculateRemainingDays(todo.deadline)
           : null;
         const isOverdue = remainingDays !== null && remainingDays <= 0;
-
         return (
           <div
             className={`relative rounded-2xl border-8 bg-gradient-to-r from-red-100 to-blue-100 p-4 shadow-xl ${isOverdue ? "border-red-500" : "border-green-500"} ${todo.isDone ? "opacity-50" : ""}`}
