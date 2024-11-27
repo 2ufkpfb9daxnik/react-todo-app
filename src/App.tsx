@@ -150,28 +150,28 @@ const App = () => {
                 uncompletedCount={uncompletedCount}
                 todos={todos}
               />
-              <button
-                type="button"
-                onClick={removeCompletedTodos}
-                className="mb-4 mt-5 rounded-md bg-red-500 px-3 py-1 text-2xl font-bold text-white hover:bg-red-600"
-              >
-                完了済みのタスクを削除
-              </button>
-              <div className="flex w-1/2 flex-col items-center justify-center space-y-2">
+              <div className="mt-2 flex w-1/2 flex-col items-center justify-center space-y-2">
+                <button
+                  type="button"
+                  onClick={removeCompletedTodos}
+                  className="rounded-md bg-red-500 px-3 py-1 text-2xl font-bold text-white hover:bg-red-600"
+                >
+                  完了済みのタスクを削除
+                </button>
                 {/* <button
-            type="button"
-            onClick={sortTodosByPriority}
-            className="rounded-md bg-blue-500 px-3 py-1 font-bold text-white hover:bg-blue-600"
-          >
-            優先度順ソート
-          </button>
-          <button
-            type="button"
-            onClick={sortTodosByDeadline}
-            className="rounded-md bg-green-500 px-3 py-1 font-bold text-white hover:bg-green-600"
-          >
-            期日順ソート
-          </button> */}
+                  type="button"
+                  onClick={sortTodosByPriority}
+                  className="rounded-md bg-blue-500 px-3 py-1 text-2xl font-bold text-white hover:bg-blue-600"
+                >
+                  優先度順ソート
+                </button>
+                <button
+                  type="button"
+                  onClick={sortTodosByDeadline}
+                  className="rounded-md bg-green-500 px-3 py-1 text-2xl font-bold text-white hover:bg-green-600"
+                >
+                  期日順ソート
+                </button> */}
               </div>
             </div>
           </div>
@@ -179,7 +179,7 @@ const App = () => {
             <h2 className="text-lg font-bold">新しいタスクの追加</h2>
             <div>
               <div className="flex items-center space-x-2">
-                <label className="font-bold" htmlFor="newTodoName">
+                <label className="m-4 font-bold" htmlFor="newTodoName">
                   名前
                 </label>
                 <input
@@ -201,7 +201,7 @@ const App = () => {
                 </div>
               )}
               <div className="flex gap-5">
-                <div className="font-bold">優先度</div>
+                <div className="m-4 font-bold">優先度</div>
                 {[1, 2, 3, 4, 5].map((value) => (
                   <label key={value} className="flex items-center space-x-1">
                     <input
@@ -217,7 +217,7 @@ const App = () => {
                 ))}
               </div>
               <div className="flex items-center space-x-2">
-                <label className="font-bold" htmlFor="newTodoDeadline">
+                <label className="m-4 font-bold" htmlFor="newTodoDeadline">
                   期限
                 </label>
                 <input
