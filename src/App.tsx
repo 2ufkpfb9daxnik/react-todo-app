@@ -130,7 +130,7 @@ const App = () => {
     );
   };
 
-  const currentDate = dayjs().format("YYYY年MM月DD日 H時m分");
+  const currentDate = dayjs().format("YYYY年MM月DD日 HH時mm分");
 
   return (
     <div
@@ -138,19 +138,42 @@ const App = () => {
       style={{ backgroundImage: `url(${background})`, backgroundSize: "cover" }}
     >
       <div className="mx-4 w-full max-w-7.5xl md:mx-auto">
-        <h1 className="mb-4 text-7xl font-bold">やること管理</h1>
-        <div className="mb-4 font-bold">今は{currentDate}です</div>
-        <div className="mb-4">
-          <WelcomeMessage
-            name="寝屋川タヌキ"
-            uncompletedCount={uncompletedCount}
-            todos={todos}
-          />
-        </div>
-
-        {/* タスク追加関連のUI実装 ここから... */}
-        <div className="mt-5 flex justify-between space-y-2 rounded-md border bg-white p-3">
-          <div className="w-1/2">
+        <div className="flex flex-col md:flex-row md:justify-between">
+          <div className="flex flex-col">
+            <h1 className="mb-4 text-7xl font-bold">やること管理</h1>
+            <div className="mb-4 font-bold">今は{currentDate}です</div>
+            <div className="mb-4">
+              <WelcomeMessage
+                name="寝屋川タヌキ"
+                uncompletedCount={uncompletedCount}
+                todos={todos}
+              />
+              <button
+                type="button"
+                onClick={removeCompletedTodos}
+                className="mb-4 mt-5 rounded-md bg-red-500 px-3 py-1 text-2xl font-bold text-white hover:bg-red-600"
+              >
+                完了済みのタスクを削除
+              </button>
+              <div className="flex w-1/2 flex-col items-center justify-center space-y-2">
+                {/* <button
+            type="button"
+            onClick={sortTodosByPriority}
+            className="rounded-md bg-blue-500 px-3 py-1 font-bold text-white hover:bg-blue-600"
+          >
+            優先度順ソート
+          </button>
+          <button
+            type="button"
+            onClick={sortTodosByDeadline}
+            className="rounded-md bg-green-500 px-3 py-1 font-bold text-white hover:bg-green-600"
+          >
+            期日順ソート
+          </button> */}
+              </div>
+            </div>
+          </div>
+          <div className="mt-5 flex flex-col justify-between space-y-2 rounded-md border bg-white p-3 md:ml-4 md:mt-0 md:w-1/2">
             <h2 className="text-lg font-bold">新しいタスクの追加</h2>
             <div>
               <div className="flex items-center space-x-2">
@@ -161,7 +184,7 @@ const App = () => {
                   id="newTodoName"
                   type="text"
                   value={newTodoName}
-                  onChange={updateNewTodoName}
+                  onChange={(e) => setNewTodoName(e.target.value)}
                   className={twMerge(
                     "grow rounded-md border p-2",
                     newTodoNameError && "border-red-500 outline-red-500"
@@ -170,90 +193,65 @@ const App = () => {
                 />
               </div>
               {newTodoNameError && (
-                <div className="ml-10 flex items-center space-x-1 text-sm font-bold text-red-500 ">
-                  <FontAwesomeIcon
-                    icon={faTriangleExclamation}
-                    className="mr-0.5"
-                  />
-                  <div>{newTodoNameError}</div>
+                <div className="ml-10 flex items-center space-x-1 text-sm font-bold text-red-500">
+                  <FontAwesomeIcon icon={faTriangleExclamation} />
+                  <span>{newTodoNameError}</span>
                 </div>
               )}
-              <div className="mt-2 flex items-center gap-x-2">
-                <label htmlFor="deadline" className="font-bold">
+              <div className="flex items-center space-x-2">
+                <label className="font-bold" htmlFor="newTodoPriority">
+                  優先度
+                </label>
+                <input
+                  id="newTodoPriority"
+                  type="number"
+                  value={newTodoPriority}
+                  onChange={(e) => setNewTodoPriority(parseInt(e.target.value))}
+                  className="grow rounded-md border p-2"
+                  min="1"
+                  max="5"
+                />
+              </div>
+              <div className="flex items-center space-x-2">
+                <label className="font-bold" htmlFor="newTodoDeadline">
                   期限
                 </label>
                 <input
+                  id="newTodoDeadline"
                   type="datetime-local"
-                  id="deadline"
                   value={
                     newTodoDeadline
-                      ? dayjs(newTodoDeadline).format("YYYY-MM-DDTHH:mm:ss")
+                      ? dayjs(newTodoDeadline).format("YYYY-MM-DDTHH:mm")
                       : ""
                   }
-                  onChange={updateDeadline}
-                  className="rounded-md border border-gray-400 px-2 py-0.5"
+                  onChange={(e) =>
+                    setNewTodoDeadline(
+                      e.target.value ? new Date(e.target.value) : null
+                    )
+                  }
+                  className="grow rounded-md border p-2"
                 />
               </div>
-              <div className="mt-2 flex gap-5">
-                <div className="font-bold">優先度</div>
-                {[1, 2, 3, 4, 5].map((value) => (
-                  <label key={value} className="flex items-center space-x-1">
-                    <input
-                      type="radio"
-                      name="priority"
-                      value={value}
-                      checked={newTodoPriority === value}
-                      onChange={() => setNewTodoPriority(value)}
-                      className="cursor-pointer"
-                    />
-                    <span>{value}</span>
-                  </label>
-                ))}
-              </div>
               <button
-                type="button"
                 onClick={addNewTodo}
-                className="mt-2 rounded-md bg-indigo-500 px-3 py-1 font-bold text-white hover:bg-indigo-600"
+                className="mt-2 w-full rounded-md bg-blue-500 p-2 text-white hover:bg-blue-600"
               >
                 追加
               </button>
             </div>
           </div>
-          <div className="flex w-1/2 flex-col items-center justify-center space-y-2">
-            {/* <button
-              type="button"
-              onClick={sortTodosByPriority}
-              className="rounded-md bg-blue-500 px-3 py-1 font-bold text-white hover:bg-blue-600"
-            >
-              優先度順ソート
-            </button>
-            <button
-              type="button"
-              onClick={sortTodosByDeadline}
-              className="rounded-md bg-green-500 px-3 py-1 font-bold text-white hover:bg-green-600"
-            >
-              期日順ソート
-            </button> */}
-          </div>
         </div>
-        <button
-          type="button"
-          onClick={removeCompletedTodos}
-          className="mb-4 mt-5 rounded-md bg-red-500 px-3 py-1 font-bold text-white hover:bg-red-600"
-        >
-          完了済みのタスクを削除
-        </button>
         <TodoList
           todos={todos}
           updateIsDone={updateIsDone}
           remove={remove}
           updateTodo={updateTodo}
         />
-        {/* タスク追加関連のUI実装 ここまで */}
-        <a href="https://www.vecteezy.com/free-vector/summer">
-          Summer Vectors by Vecteezy
-        </a>
       </div>
+      {/* タスク追加関連のUI実装 ここまで */}
+      <a href="https://www.vecteezy.com/free-vector/summer">
+        Summer Vectors by Vecteezy
+      </a>
     </div>
   );
 };
