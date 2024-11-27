@@ -2,6 +2,8 @@
 
 React、TypeScript、Tailwind CSS を使用し、ローカルストレージでデータを永続化した「Todoアプリ」です。
 
+意味ある更新
+
 https://www.youtube.com/watch?v=An29jZOqyGY を参考にしました
 
 ## 開発履歴
