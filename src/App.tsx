@@ -250,6 +250,9 @@ const App = () => {
           updateTodo={updateTodo}
         />
         {/* タスク追加関連のUI実装 ここまで */}
+        <a href="https://www.vecteezy.com/free-vector/summer">
+          Summer Vectors by Vecteezy
+        </a>
       </div>
     </div>
   );

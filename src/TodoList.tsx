@@ -52,19 +52,19 @@ const TodoList = (props: Props) => {
     }
   };
 
-  const handleEditClick = (todo) => {
-    setEditingTodoId(todo.id);
-    setEditedTodo({
-      name: todo.name,
-      priority: todo.priority,
-      deadline: todo.deadline,
-    });
-  };
+  // const handleEditClick = (todo: ) => {
+  //   setEditingTodoId(todo.id);
+  //   setEditedTodo({
+  //     name: todo.name,
+  //     priority: todo.priority,
+  //     deadline: todo.deadline,
+  //   });
+  // };
 
-  const handleSaveClick = (id) => {
-    props.updateTodo(id, editedTodo);
-    setEditingTodoId(null);
-  };
+  // const handleSaveClick = (id) => {
+  //   props.updateTodo(id, editedTodo);
+  //   setEditingTodoId(null);
+  // };
 
   return (
     <div className="space-y-5">
