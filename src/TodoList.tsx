@@ -142,7 +142,12 @@ const TodoList = (props: Props) => {
                     })
                   }
                 />
-                <button onClick={() => handleSaveClick(todo.id)}>保存</button>
+                <button
+                  className="rounded-md bg-blue-400 px-2 py-1 text-sm font-bold text-white hover:bg-blue-500"
+                  onClick={() => handleSaveClick(todo.id)}
+                >
+                  保存
+                </button>
               </div>
             ) : (
               <div>

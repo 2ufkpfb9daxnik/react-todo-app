@@ -100,4 +100,11 @@ export const initTodos: Todo[] = [
     priority: 1,
     deadline: new Date(2029, 11, 11, 11, 11),
   },
+  {
+    id: uuid(),
+    name: "グラフ理論",
+    isDone: false,
+    priority: 1,
+    deadline: new Date(2027, 5, 30, 0, 1),
+  },
 ];
