@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 import { twMerge } from "tailwind-merge";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+import background from "../public/background.jpg";
 
 const App = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -121,11 +122,21 @@ const App = () => {
     });
     setTodos(sortedTodos);
   };
+  const updateTodo = (id: string, updatedTodo: Partial<Todo>) => {
+    setTodos((prevTodos) =>
+      prevTodos.map((todo) =>
+        todo.id === id ? { ...todo, ...updatedTodo } : todo
+      )
+    );
+  };
 
   const currentDate = dayjs().format("YYYY年MM月DD日 H時m分");
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-start bg-gray-500">
+    <div
+      className="flex min-h-screen flex-col items-center justify-start bg-gray-500"
+      style={{ backgroundImage: `url(${background})`, backgroundSize: "cover" }}
+    >
       <div className="mx-4 w-full max-w-7.5xl md:mx-auto">
         <h1 className="mb-4 text-7xl font-bold">やること管理</h1>
         <div className="mb-4 font-bold">今は{currentDate}です</div>
@@ -209,7 +220,7 @@ const App = () => {
             </div>
           </div>
           <div className="flex w-1/2 flex-col items-center justify-center space-y-2">
-            <button
+            {/* <button
               type="button"
               onClick={sortTodosByPriority}
               className="rounded-md bg-blue-500 px-3 py-1 font-bold text-white hover:bg-blue-600"
@@ -222,7 +233,7 @@ const App = () => {
               className="rounded-md bg-green-500 px-3 py-1 font-bold text-white hover:bg-green-600"
             >
               期日順ソート
-            </button>
+            </button> */}
           </div>
         </div>
         <button
@@ -232,7 +243,12 @@ const App = () => {
         >
           完了済みのタスクを削除
         </button>
-        <TodoList todos={todos} updateIsDone={updateIsDone} remove={remove} />
+        <TodoList
+          todos={todos}
+          updateIsDone={updateIsDone}
+          remove={remove}
+          updateTodo={updateTodo}
+        />
         {/* タスク追加関連のUI実装 ここまで */}
       </div>
     </div>

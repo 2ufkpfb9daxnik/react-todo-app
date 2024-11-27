@@ -1,10 +1,11 @@
 # TodoApp
 
+https://2ufkpfb9daxnik.github.io/react-todo-app/
+
 React、TypeScript、Tailwind CSS を使用し、ローカルストレージでデータを永続化した「Todoアプリ」です。
 
-意味ある更新
-
-https://www.youtube.com/watch?v=An29jZOqyGY を参考にしました
+https://www.youtube.com/watch?v=An29jZOqyGY を参考に、重要度で文字サイズを変えるなどしました
+期日を過ぎると赤くして急かします
 
 ## 開発履歴
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import dayjs from "dayjs";
 import { FaStar } from "react-icons/fa";
 import { Todo } from "./types";
@@ -9,10 +9,17 @@ type Props = {
   todos: Todo[];
   updateIsDone: (id: string, value: boolean) => void;
   remove: (id: string) => void; // ◀◀ 追加
+  updateTodo: (id: string, todo: Todo) => void;
 };
 
 const TodoList = (props: Props) => {
   const todos = [...props.todos].sort((a, b) => a.priority - b.priority);
+  const [editingTodoId, setEditingTodoId] = useState(null);
+  const [editedTodo, setEditedTodo] = useState({
+    name: "",
+    priority: 3,
+    deadline: null,
+  });
 
   if (todos.length === 0) {
     return (
@@ -43,6 +50,20 @@ const TodoList = (props: Props) => {
       default:
         return "";
     }
+  };
+
+  const handleEditClick = (todo) => {
+    setEditingTodoId(todo.id);
+    setEditedTodo({
+      name: todo.name,
+      priority: todo.priority,
+      deadline: todo.deadline,
+    });
+  };
+
+  const handleSaveClick = (id) => {
+    props.updateTodo(id, editedTodo);
+    setEditingTodoId(null);
   };
 
   return (
@@ -111,6 +132,12 @@ const TodoList = (props: Props) => {
             >
               削除
             </button>
+            {/* <button
+              onClick={() => handleEditClick(todo)}
+              className="rounded-md bg-slate-200 px-2 py-1 text-sm font-bold text-white hover:bg-blue-500"
+            >
+              編集
+            </button> */}
           </div>
         );
       })}

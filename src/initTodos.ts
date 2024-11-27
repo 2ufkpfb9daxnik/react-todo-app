@@ -20,13 +20,13 @@ export const initTodos: Todo[] = [
     id: uuid(),
     name: "基礎物理学3の宿題",
     isDone: false,
-    priority: 1,
+    priority: 4,
     deadline: new Date(2024, 10, 11),
   },
   {
     id: uuid(),
     name: "データ構造とアルゴリズム",
-    isDone: false,
+    isDone: true,
     priority: 1,
     deadline: new Date(2024, 10, 30, 17, 30),
   },
@@ -36,5 +36,12 @@ export const initTodos: Todo[] = [
     isDone: false,
     priority: 2,
     deadline: new Date(2024, 10, 30, 22, 30),
+  },
+  {
+    id: uuid(),
+    name: "Reactの勉強",
+    isDone: false,
+    priority: 5,
+    deadline: new Date(2025, 2, 1, 2, 8),
   },
 ];
