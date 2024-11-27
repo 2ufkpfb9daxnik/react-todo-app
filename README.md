@@ -7,6 +7,10 @@ React、TypeScript、Tailwind CSS を使用し、ローカルストレージで�
 https://www.youtube.com/watch?v=An29jZOqyGY を参考に、重要度で文字サイズを変えるなどしました
 期日を過ぎると赤くして急かします
 
+背景画像として
+https://www.vecteezy.com/vector-art/8014116-summer-background-vector-design-hello-summer-concept-design-abstract-background-illustration-with-wave-line-and-leaves-colorful-banner
+を利用、その際の帰属表示は要請に従い<link>ではなく<a href=...>とした
+
 ## 開発履歴
 
 - 2024年10月24日：プロジェクト開始
