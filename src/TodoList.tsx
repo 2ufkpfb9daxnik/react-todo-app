@@ -2,20 +2,19 @@ import React, { useState } from "react";
 import dayjs from "dayjs";
 import { FaStar } from "react-icons/fa";
 import { Todo } from "./types";
-import TodoItem from "./TodoItem";
 import complete from "../public/circle-3.svg";
 
 type Props = {
   todos: Todo[];
   updateIsDone: (id: string, value: boolean) => void;
-  remove: (id: string) => void; // ◀◀ 追加
-  updateTodo: (id: string, todo: Todo) => void;
+  remove: (id: string) => void;
+  updateTodo: (id: string, updatedTodo: Partial<Todo>) => void;
 };
 
 const TodoList = (props: Props) => {
   const todos = [...props.todos].sort((a, b) => a.priority - b.priority);
-  const [editingTodoId, setEditingTodoId] = useState(null);
-  const [editedTodo, setEditedTodo] = useState({
+  const [editingTodoId, setEditingTodoId] = useState<string | null>(null);
+  const [editedTodo, setEditedTodo] = useState<Partial<Todo>>({
     name: "",
     priority: 3,
     deadline: null,
@@ -52,23 +51,23 @@ const TodoList = (props: Props) => {
     }
   };
 
-  // const handleEditClick = (todo: ) => {
-  //   setEditingTodoId(todo.id);
-  //   setEditedTodo({
-  //     name: todo.name,
-  //     priority: todo.priority,
-  //     deadline: todo.deadline,
-  //   });
-  // };
+  const handleEditClick = (todo: Todo) => {
+    setEditingTodoId(todo.id);
+    setEditedTodo({
+      name: todo.name,
+      priority: todo.priority,
+      deadline: todo.deadline,
+    });
+  };
 
-  // const handleSaveClick = (id) => {
-  //   props.updateTodo(id, editedTodo);
-  //   setEditingTodoId(null);
-  // };
+  const handleSaveClick = (id: string) => {
+    props.updateTodo(id, editedTodo);
+    setEditingTodoId(null);
+  };
 
   return (
-    <div className="space-y-5">
-      {todos.map((todo) => {
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+      {todos.map((todo: Todo) => {
         const remainingDays = todo.deadline
           ? calculateRemainingDays(todo.deadline)
           : null;
@@ -78,66 +77,131 @@ const TodoList = (props: Props) => {
           todo.priority;
         const priorityFontSize = `${1 + (todo.priority - 1) * 0.5}rem`; // 優先度に応じたフォントサイズ
 
+        // 優先度に応じたグリッドのクラスを設定
+        let gridClass = "";
+        switch (todo.priority) {
+          case 1:
+            gridClass = "col-span-1";
+            break;
+          case 2:
+          case 3:
+            gridClass = "col-span-2";
+            break;
+          case 4:
+            gridClass = "col-span-3";
+            break;
+          case 5:
+            gridClass = "col-span-4 row-span-2";
+            break;
+          default:
+            gridClass = "col-span-1";
+        }
+
         return (
           <div
-            className={`relative rounded-2xl border-8 bg-gradient-to-r from-red-100 to-blue-100 p-4 shadow-xl ${isOverdue ? "border-red-500" : "border-green-500"} ${todo.isDone ? "opacity-50" : ""}`}
+            className={`relative rounded-2xl border-8 bg-gradient-to-r from-red-100 to-blue-100 p-4 shadow-xl ${isOverdue ? "border-red-500" : "border-green-500"} ${todo.isDone ? "opacity-50" : ""} ${gridClass}`}
             key={todo.id}
           >
-            {todo.isDone && (
-              <img
-                src={complete}
-                alt="達成済み!"
-                className="absolute inset-0 size-full object-cover opacity-20"
-              />
-            )}
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                checked={todo.isDone}
-                onChange={(e) => props.updateIsDone(todo.id, e.target.checked)}
-                className="mr-3 size-8 cursor-pointer"
-              />
-              <div
-                className={`text-5xl font-bold ${isOverdue ? "text-red-500" : ""}`}
-                style={{ fontSize: priorityFontSize }}
-              >
-                {isOverdue ? `***${todo.name}***` : todo.name}
+            {editingTodoId === todo.id ? (
+              <div>
+                <input
+                  className="rounded-md border border-gray-400 px-2 py-0.5"
+                  type="text"
+                  value={editedTodo.name}
+                  onChange={(e) =>
+                    setEditedTodo({ ...editedTodo, name: e.target.value })
+                  }
+                />
+                <input
+                  className="rounded-md border border-gray-400 px-2 py-0.5"
+                  type="number"
+                  value={editedTodo.priority}
+                  onChange={(e) =>
+                    setEditedTodo({
+                      ...editedTodo,
+                      priority: parseInt(e.target.value),
+                    })
+                  }
+                />
+                <input
+                  className="rounded-md border border-gray-400 px-2 py-0.5"
+                  type="datetime-local"
+                  value={
+                    editedTodo.deadline
+                      ? dayjs(editedTodo.deadline).format("YYYY-MM-DDTHH:mm")
+                      : ""
+                  }
+                  onChange={(e) =>
+                    setEditedTodo({
+                      ...editedTodo,
+                      deadline: e.target.value
+                        ? new Date(e.target.value)
+                        : null,
+                    })
+                  }
+                />
+                <button
+                  className="rounded-md bg-slate-500 px-2 py-1 text-sm font-bold text-white hover:bg-blue-500"
+                  onClick={() => handleSaveClick(todo.id)}
+                >
+                  保存
+                </button>
               </div>
-            </div>
-            <div
-              className="flex items-center text-2xl"
-              style={{ fontSize: priorityFontSize }}
-            >
-              優先度{" "}
-              {Array(todo.priority)
-                .fill(0)
-                .map((_, i) => (
-                  <FaStar key={i} className="text-yellow-500" />
-                ))}
-              <span className="ml-2">{getPriorityLabel(todo.priority)}</span>
-            </div>
-            <div className="text-2xl" style={{ fontSize: priorityFontSize }}>
-              {" "}
-              {todo.deadline
-                ? dayjs(todo.deadline).format("YYYY/MM/DD HH:mm")
-                : "いつまでも"}
-              まで
-            </div>
-            <div className="text-2xl" style={{ fontSize: priorityFontSize }}>
-              あと{todo.deadline ? `${remainingDays}日` : "何日とかないよー"}
-            </div>
-            <button
-              onClick={() => props.remove(todo.id)}
-              className="rounded-md bg-slate-200 px-2 py-1 text-sm font-bold text-white hover:bg-red-500"
-            >
-              削除
-            </button>
-            {/* <button
-              onClick={() => handleEditClick(todo)}
-              className="rounded-md bg-slate-200 px-2 py-1 text-sm font-bold text-white hover:bg-blue-500"
-            >
-              編集
-            </button> */}
+            ) : (
+              <div>
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={todo.isDone}
+                    onChange={(e) =>
+                      props.updateIsDone(todo.id, e.target.checked)
+                    }
+                    className="mr-3 size-8 cursor-pointer"
+                  />
+                  <div
+                    className={`text-5xl font-bold ${isOverdue ? "text-red-500" : ""}`}
+                    style={{ fontSize: priorityFontSize }}
+                  >
+                    {isOverdue ? `***${todo.name}***` : todo.name}
+                  </div>
+                </div>
+                <div
+                  className="flex items-center text-2xl"
+                  style={{ fontSize: priorityFontSize }}
+                >
+                  優先度{" "}
+                  {Array(todo.priority)
+                    .fill(0)
+                    .map((_, i) => (
+                      <FaStar key={i} className="text-yellow-500" />
+                    ))}
+                  <span className="ml-2">
+                    {getPriorityLabel(todo.priority)}
+                  </span>
+                </div>
+                <div
+                  className="text-2xl"
+                  style={{ fontSize: priorityFontSize }}
+                >
+                  {" "}
+                  {todo.deadline
+                    ? dayjs(todo.deadline).format("YYYY/MM/DD HH:mm")
+                    : "期限なし"}
+                </div>
+                <button
+                  onClick={() => props.remove(todo.id)}
+                  className="rounded-md bg-red-400 px-2 py-1 text-sm font-bold text-white hover:bg-red-500"
+                >
+                  削除
+                </button>
+                <button
+                  onClick={() => handleEditClick(todo)}
+                  className="rounded-md bg-slate-400 px-2 py-1 text-sm font-bold text-white hover:bg-blue-500"
+                >
+                  編集
+                </button>
+              </div>
+            )}
           </div>
         );
       })}

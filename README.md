@@ -4,7 +4,7 @@ https://2ufkpfb9daxnik.github.io/react-todo-app/
 
 React、TypeScript、Tailwind CSS を使用し、ローカルストレージでデータを永続化した「Todoアプリ」です。
 
-https://www.youtube.com/watch?v=An29jZOqyGY を参考に、重要度で文字サイズを変えるなどしました
+https://www.youtube.com/watch?v=An29jZOqyGY を参考に、重要度で文字・枠サイズを変えるなどしました
 
 期日を過ぎると赤くして急かします
 

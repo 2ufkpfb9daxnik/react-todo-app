@@ -44,4 +44,25 @@ export const initTodos: Todo[] = [
     priority: 5,
     deadline: new Date(2025, 2, 1, 2, 8),
   },
+  {
+    id: uuid(),
+    name: "解析力学の勉強",
+    isDone: false,
+    priority: 4,
+    deadline: new Date(2026, 3, 1, 3, 8),
+  },
+  {
+    id: uuid(),
+    name: "漢字直接入力の計算",
+    isDone: false,
+    priority: 5,
+    deadline: new Date(2027, 9, 1, 12, 4),
+  },
+  {
+    id: uuid(),
+    name: "麻雀AIの開発",
+    isDone: false,
+    priority: 3,
+    deadline: new Date(2028, 9, 1, 12, 4),
+  },
 ];
