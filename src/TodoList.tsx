@@ -161,6 +161,13 @@ const TodoList = (props: Props) => {
                   >
                     {isOverdue || isDueSoon ? `*${todo.name}*` : todo.name}
                   </div>
+                  {todo.isDone && (
+                    <img
+                      src={complete}
+                      alt="complete"
+                      className="absolute left-0 top-0 size-full object-cover opacity-50"
+                    />
+                  )}
                 </div>
                 <div
                   className="flex items-center text-2xl"
