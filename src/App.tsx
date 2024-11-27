@@ -3,53 +3,50 @@ import { Todo } from "./types";
 import { initTodos } from "./initTodos";
 import WelcomeMessage from "./WelcomeMessage";
 import TodoList from "./TodoList";
-import { v4 as uuid } from "uuid"; // ◀◀ 追加
-import dayjs from "dayjs"; // ◀◀ 追加
-import { twMerge } from "tailwind-merge"; // ◀◀ 追加
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; // ◀◀ 追加
-import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons"; // ◀◀ 追加
+import { v4 as uuid } from "uuid";
+import dayjs from "dayjs";
+import { twMerge } from "tailwind-merge";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 
 const App = () => {
-  const [todos, setTodos] = useState<Todo[]>([]); // ◀◀ 編集
-  const [newTodoName, setNewTodoName] = useState(""); // ◀◀ 追加
-  const [newTodoPriority, setNewTodoPriority] = useState(3); // ◀◀ 追加
-  const [newTodoDeadline, setNewTodoDeadline] = useState<Date | null>(null); // ◀◀ 追加
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [newTodoName, setNewTodoName] = useState("");
+  const [newTodoPriority, setNewTodoPriority] = useState(3);
+  const [newTodoDeadline, setNewTodoDeadline] = useState<Date | null>(null);
   const [newTodoNameError, setNewTodoNameError] = useState("");
 
-  const [initialized, setInitialized] = useState(false); // ◀◀ 追加
-  const localStorageKey = "TodoApp"; // ◀◀ 追加
+  const [initialized, setInitialized] = useState(false);
+  const localStorageKey = "TodoApp";
 
-    // App コンポーネントの初回実行時のみLocalStorageからTodoデータを復元
-    useEffect(() => {
-      const todoJsonStr = localStorage.getItem(localStorageKey);
-      if (todoJsonStr && todoJsonStr !== "[]") {
-        const storedTodos: Todo[] = JSON.parse(todoJsonStr);
-        const convertedTodos = storedTodos.map((todo) => ({
-          ...todo,
-          deadline: todo.deadline ? new Date(todo.deadline) : null,
-        }));
-        setTodos(convertedTodos);
-      } else {
-        // LocalStorage にデータがない場合は initTodos をセットする
-        setTodos(initTodos);
-      }
-      setInitialized(true);
-    }, []);
-  
-    // 状態 todos または initialized に変更があったときTodoデータを保存
-    useEffect(() => {
-      if (initialized) {
-        localStorage.setItem(localStorageKey, JSON.stringify(todos));
-      }
-    }, [todos, initialized]);
-  
-    const uncompletedCount = todos.filter(
-      (todo: Todo) => !todo.isDone
-    ).length;
-  
-    console.log(JSON.stringify(todos, null, 2));
+  // App コンポーネントの初回実行時のみLocalStorageからTodoデータを復元
+  useEffect(() => {
+    const todoJsonStr = localStorage.getItem(localStorageKey);
+    if (todoJsonStr && todoJsonStr !== "[]") {
+      const storedTodos: Todo[] = JSON.parse(todoJsonStr);
+      const convertedTodos = storedTodos.map((todo) => ({
+        ...todo,
+        deadline: todo.deadline ? new Date(todo.deadline) : null,
+      }));
+      setTodos(convertedTodos);
+    } else {
+      // LocalStorage にデータがない場合は initTodos をセットする
+      setTodos(initTodos);
+    }
+    setInitialized(true);
+  }, []);
 
-  // ▼▼ 追加
+  // 状態 todos または initialized に変更があったときTodoデータを保存
+  useEffect(() => {
+    if (initialized) {
+      localStorage.setItem(localStorageKey, JSON.stringify(todos));
+    }
+  }, [todos, initialized]);
+
+  const uncompletedCount = todos.filter((todo: Todo) => !todo.isDone).length;
+
+  console.log(JSON.stringify(todos, null, 2));
+
   const isValidTodoName = (name: string): string => {
     if (name.length < 2 || name.length > 32) {
       return "2文字以上、32文字以内で入力してください";
@@ -58,46 +55,36 @@ const App = () => {
     }
   };
 
-  // ▼▼ 追加
   const updateNewTodoName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewTodoNameError(isValidTodoName(e.target.value)); // ◀◀ 追加
+    setNewTodoNameError(isValidTodoName(e.target.value));
     setNewTodoName(e.target.value);
   };
 
-  // ▼▼ 追加
-  const updateNewTodoPriority = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewTodoPriority(Number(e.target.value)); // 数値型に変換
-  };
   const updateDeadline = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const dt = e.target.value; // UIで日時が未設定のときは空文字列 "" が dt に格納される
-    console.log(`UI操作で日時が "${dt}" (${typeof dt}型) に変更されました。`);
-    setNewTodoDeadline(dt === "" ? null : new Date(dt));
+    setNewTodoDeadline(e.target.value ? new Date(e.target.value) : null);
   };
 
   const addNewTodo = () => {
-    // ▼▼ 編集
-    const err = isValidTodoName(newTodoName);
-    if (err !== "") {
-      setNewTodoNameError(err);
-      return;
-    }
+    if (newTodoNameError) return;
+
     const newTodo: Todo = {
       id: uuid(),
-      name: newTodoName, // ◀◀ 編集
+      name: newTodoName,
       isDone: false,
-      priority: newTodoPriority, // ◀◀ 追加
-      deadline: newTodoDeadline, // ◀◀ 追加
+      priority: newTodoPriority,
+      deadline: newTodoDeadline,
     };
-    const updatedTodos = [...todos, newTodo];
-    setTodos(updatedTodos);
-    setNewTodoName(""); // ◀◀ 追加
-    setNewTodoPriority(3); // ◀◀ 追加
-    setNewTodoDeadline(null); // ◀◀ 追加
+
+    setTodos([...todos, newTodo]);
+    setNewTodoName("");
+    setNewTodoPriority(3);
+    setNewTodoDeadline(null);
   };
+
   const updateIsDone = (id: string, value: boolean) => {
     const updatedTodos = todos.map((todo) => {
       if (todo.id === id) {
-        return { ...todo, isDone: value }; // スプレッド構文
+        return { ...todo, isDone: value };
       } else {
         return todo;
       }
@@ -114,11 +101,32 @@ const App = () => {
     const updatedTodos = todos.filter((todo) => todo.id !== id);
     setTodos(updatedTodos);
   };
+
+  const sortTodosByPriority = () => {
+    const sortedTodos = [...todos].sort((a, b) => b.priority - a.priority);
+    setTodos(sortedTodos);
+  };
+
+  const sortTodosByDeadline = () => {
+    const sortedTodos = [...todos].sort((a, b) => {
+      if (a.deadline && b.deadline) {
+        return new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
+      } else if (a.deadline) {
+        return -1;
+      } else if (b.deadline) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
+    setTodos(sortedTodos);
+  };
+
   const currentDate = dayjs().format("YYYY年MM月DD日 H時m分");
 
   return (
-    <div className="bg-gray-500">
-      <div className="mx-4 max-w-2xl md:mx-auto">
+    <div className="flex min-h-screen flex-col items-center justify-start bg-gray-500">
+      <div className="mx-4 w-full max-w-7.5xl md:mx-auto">
         <h1 className="mb-4 text-7xl font-bold">やること管理</h1>
         <div className="mb-4 font-bold">今は{currentDate}です</div>
         <div className="mb-4">
@@ -130,94 +138,102 @@ const App = () => {
         </div>
 
         {/* タスク追加関連のUI実装 ここから... */}
-        <div className="mt-5 space-y-2 rounded-md border bg-white p-3">
-          <h2 className="text-lg font-bold">新しいタスクの追加</h2>
-          {/* 編集: ここから... */}
-          <div>
-            <div className="flex items-center space-x-2">
-              <label className="font-bold" htmlFor="newTodoName">
-                名前
-              </label>
-              <input
-                id="newTodoName"
-                type="text"
-                value={newTodoName}
-                onChange={updateNewTodoName}
-                className={twMerge(
-                  "grow rounded-md border p-2",
-                  newTodoNameError && "border-red-500 outline-red-500"
-                )}
-                placeholder="2文字以上32文字以内"
-              />
-            </div>
-            {newTodoNameError && (
-              <div className="ml-10 flex items-center space-x-1 text-sm font-bold text-red-500 ">
-                <FontAwesomeIcon
-                  icon={faTriangleExclamation}
-                  className="mr-0.5"
-                />
-                <div>{newTodoNameError}</div>
-              </div>
-            )}
-          </div>
-          {/* ...ここまで */}
-
-          {/* ラジオボタンの実装 ここから... */}
-          <div className="flex gap-5">
-            <div className="font-bold">優先度</div>
-            {[1, 2, 3].map((value) => (
-              <label key={value} className="flex items-center space-x-1">
+        <div className="mt-5 flex justify-between space-y-2 rounded-md border bg-white p-3">
+          <div className="w-1/2">
+            <h2 className="text-lg font-bold">新しいタスクの追加</h2>
+            <div>
+              <div className="flex items-center space-x-2">
+                <label className="font-bold" htmlFor="newTodoName">
+                  名前
+                </label>
                 <input
-                  id={`priority-${value}`}
-                  name="priorityGroup"
-                  type="radio"
-                  value={value}
-                  checked={newTodoPriority === value}
-                  onChange={updateNewTodoPriority}
+                  id="newTodoName"
+                  type="text"
+                  value={newTodoName}
+                  onChange={updateNewTodoName}
+                  className={twMerge(
+                    "grow rounded-md border p-2",
+                    newTodoNameError && "border-red-500 outline-red-500"
+                  )}
+                  placeholder="2文字以上32文字以内"
                 />
-                <span>{value}</span>
-              </label>
-            ))}
+              </div>
+              {newTodoNameError && (
+                <div className="ml-10 flex items-center space-x-1 text-sm font-bold text-red-500 ">
+                  <FontAwesomeIcon
+                    icon={faTriangleExclamation}
+                    className="mr-0.5"
+                  />
+                  <div>{newTodoNameError}</div>
+                </div>
+              )}
+              <div className="mt-2 flex items-center gap-x-2">
+                <label htmlFor="deadline" className="font-bold">
+                  期限
+                </label>
+                <input
+                  type="datetime-local"
+                  id="deadline"
+                  value={
+                    newTodoDeadline
+                      ? dayjs(newTodoDeadline).format("YYYY-MM-DDTHH:mm:ss")
+                      : ""
+                  }
+                  onChange={updateDeadline}
+                  className="rounded-md border border-gray-400 px-2 py-0.5"
+                />
+              </div>
+              <div className="mt-2 flex gap-5">
+                <div className="font-bold">優先度</div>
+                {[1, 2, 3, 4, 5].map((value) => (
+                  <label key={value} className="flex items-center space-x-1">
+                    <input
+                      type="radio"
+                      name="priority"
+                      value={value}
+                      checked={newTodoPriority === value}
+                      onChange={() => setNewTodoPriority(value)}
+                      className="cursor-pointer"
+                    />
+                    <span>{value}</span>
+                  </label>
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={addNewTodo}
+                className="mt-2 rounded-md bg-indigo-500 px-3 py-1 font-bold text-white hover:bg-indigo-600"
+              >
+                追加
+              </button>
+            </div>
           </div>
-          {/* ...ここまで */}
-          {/* DateTimeUIの実装 ここから... */}
-          <div className="flex items-center gap-x-2">
-            <label htmlFor="deadline" className="font-bold">
-              期限
-            </label>
-            <input
-              type="datetime-local"
-              id="deadline"
-              value={
-                newTodoDeadline
-                  ? dayjs(newTodoDeadline).format("YYYY-MM-DDTHH:mm:ss")
-                  : ""
-              }
-              onChange={updateDeadline}
-              className="rounded-md border border-gray-400 px-2 py-0.5"
-            />
+          <div className="flex w-1/2 flex-col items-center justify-center space-y-2">
+            <button
+              type="button"
+              onClick={sortTodosByPriority}
+              className="rounded-md bg-blue-500 px-3 py-1 font-bold text-white hover:bg-blue-600"
+            >
+              優先度順ソート
+            </button>
+            <button
+              type="button"
+              onClick={sortTodosByDeadline}
+              className="rounded-md bg-green-500 px-3 py-1 font-bold text-white hover:bg-green-600"
+            >
+              期日順ソート
+            </button>
           </div>
-          {/* ...ここまで */}
-
-          <button
-            type="button"
-            onClick={addNewTodo} // ボタンを押下したときの処理
-            className="rounded-md bg-indigo-500 px-3 py-1 font-bold text-white hover:bg-indigo-600"
-          >
-            追加
-          </button>
         </div>
         <button
           type="button"
           onClick={removeCompletedTodos}
-          className={
-            "mt-5 rounded-md bg-red-500 px-3 py-1 font-bold text-white hover:bg-red-600"
-          }
+          className="mb-4 mt-5 rounded-md bg-red-500 px-3 py-1 font-bold text-white hover:bg-red-600"
         >
           完了済みのタスクを削除
         </button>
         <TodoList todos={todos} updateIsDone={updateIsDone} remove={remove} />
-        {/* ...ここまで */}
+        {/* タスク追加関連のUI実装 ここまで */}
       </div>
     </div>
   );
