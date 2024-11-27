@@ -9,7 +9,15 @@ https://www.youtube.com/watch?v=An29jZOqyGY を参考に、重要度で文字サ
 
 背景画像として
 https://www.vecteezy.com/vector-art/8014116-summer-background-vector-design-hello-summer-concept-design-abstract-background-illustration-with-wave-line-and-leaves-colorful-banner
-を利用、その際の帰属表示は要請に従い<link>ではなく<a href="https://www.vecteezy.com/free-vector/summer">Summer Vectors by Vecteezy</a>とした
+を利用、その際の帰属表示は要請に従い
+
+<!-- <link> -->
+
+ではなく
+
+<!-- <a href="https://www.vecteezy.com/free-vector/summer">Summer Vectors by Vecteezy</a> -->
+
+とした
 
 ## 開発履歴
 
